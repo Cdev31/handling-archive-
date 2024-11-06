@@ -1,40 +1,29 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <iostream>
+#include "metadata.h"
 
-using namespace std;
 
-void getAllUsers(){
+string* getUser( string username ){
 
-    int size = 0;
-    int counter = 0;
-    string users[size] ;
+    int size = getUserNumbers();
+
+    static string user[2];
+
     string line;
     ifstream file("./users.txt");
 
     if( !file.is_open() ){
         cerr << " Error no se pudo abrri el archivo " << "\n";
-        return ;
+        return 0;
+    }
+    
+    while( getline( file, line, ',') ){
+        int userNameIndex = line.find( "username:" + username );
+        int passwordIndex = line.find( "password:");
+
+        if( userNameIndex != string::npos ){
+            user[0] = username;
+            user[1] = line.substr( passwordIndex + 9 );
+        }
     }
 
-
-
-    cout << size << endl;
-
-    // while( getline( file, line, ',' )  ){
-    //     if(  size > counter ){
-    //         users[counter] = line;
-    //         counter++;
-    //     }else {
-    //         break;
-    //     }
-    // }
-
-    file.close();
-
-    // for( short i =0; size > i; i++ ){
-    //     cout << users[i] << endl;
-    // }
-
+    return user;
 }
